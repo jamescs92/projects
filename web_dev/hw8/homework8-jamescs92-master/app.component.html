@@ -1,0 +1,236 @@
+
+
+<!--SEARCH CARD-->
+<div style = "margin:10px">
+<div class = "container shadow-sm rounded text-white" id = "initsearch">
+  <h1 class = "text-center font-weight-normal mt-5 mb-5">Weather Search</h1>
+  <div class = "idMargins">
+  <form>
+    <div class="form-group row">
+        <label for="inputStreet" class="col-sm-2 col-form-label">Street<span style = "color:red"> *</span></label>
+        <div class="col-sm-10">
+            <input [disabled] = "streetable" type="text" class="form-control" id="inputStreet" placeholder="Enter Street Name" [(ngModel)] ="street" name = "street" (focusout) = "focusOut($event)" (focusin) = "focusIn($event)" (keyup) = "checkForm()">
+            <span [style.display] = "streetDisp" id = "streetWrong" style = "color:red">Please enter a street.</span>
+        </div>
+      </div>
+
+    <div class="form-group row">
+        <label for="inputCity" class="col-sm-2 col-form-label">City<span style = "color:red"> *</span></label>
+        <div class="col-sm-10">
+          
+            <input  type="text" class="form-control" id="inputCity" placeholder="Enter City Name" name = "city" matInput [formControl]="myControl" [matAutocomplete]="auto" (focusout) = "focusOut($event)" (focusin) = "focusIn($event)" (keyup) = "autoChange()" >
+            <span [style.display] = "cityDisp" id = "streetWrong" style = "color:red">Please enter a city.</span>
+          
+          <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let option of options" [value]="option">{{option}}</mat-option>
+          </mat-autocomplete>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="inputState" class="col-sm-2 col-form-label">State<span style = "color:red"> *</span></label>
+        <div class="col-sm-10">
+          <select [disabled] = "stateable" id="inputState" class="form-control" [(ngModel)] ="state" name = "state" (change) = "checkForm()">
+          <option value='Select State' selected>Select State</option>
+          <option *ngFor="let state of states" [value]="state">{{state}}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="gridCheck" name="locCheckLink" [(ngModel)]="locCheckLink"  (change) = "disableInputs($event)">
+            <label class="form-check-label" for="currLoc">Current Location</label>
+        </div>
+    </div>
+    <button [disabled] = "searchDisabled" type="button" class="btn btn-light" (click) = "searchClicked()"><i style = "vertical-align: text-bottom; font-size:20px;" class="material-icons">search</i>Search</button>
+    <button type="button" class="btn btn-light" (click) = "clear()"><i style = "vertical-align: text-bottom; font-size:20px" class="material-icons">clear_all</i>Clear</button>
+    <div style = "height:70px"></div>
+
+  </form>
+</div>
+</div>
+</div>
+
+
+
+
+<!--MIDDLE BUTTONS-->
+<div class = "container text-center">
+  <button type="button" class="btn btn-light" (click) = "resultsClicked()" [style.background-color] = "resultsStyle">Results</button>
+  <button type="button" class="btn btn-light" (click) = "favoritesClicked()" [style.background-color] = "favoritesStyle">Favorites</button>
+</div>
+
+<!--progress bar-->
+<p [style.display] = "progressBar"><ngb-progressbar type="info" [value]="50" [striped]="true" [animated]="true"><i></i></ngb-progressbar></p>
+
+
+<div [class] = "showBottom">
+<!--THREE TABS-->
+<div class = "container-fluid" [style.display] = "resultsShow" id = "tabsID">
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+  <li class="nav-item">
+    <a style = "color:black" [class]="liclass_current" id="current-tab" data-toggle="tab" href="#current" role="tab" aria-controls="current" aria-selected= "false" (click)= "changeTabcurrent()">Current</a>
+  </li>
+  <li class="nav-item">
+    <a style = "color:black"[class]="liclass_hourly" id="hourly-tab" data-toggle="tab" href="#hourly" role="tab" aria-controls="hourly" aria-selected="false" (click)= "changeTabhourly()">Hourly</a>
+  </li>
+  <li class="nav-item">
+    <a style = "color:black"[class]="liclass_weekly" id="weekly-tab" data-toggle="tab" href="#weekly" role="tab" aria-controls="weekly" aria-selected="false" (click)= "changeTabweekly()">Weekly</a>
+  </li>
+  <li class="nav-item ml-auto twitter-share-button">
+    <a target="_blank" style = "padding:0px" class="nav-link" [href]="twitterString"><img src = "https://csci571.com/hw/hw8/Images/Twitter.png" style = "width:41px"></a>
+  </li>
+  <li class="nav-item" >
+    <a style = "padding-bottom:0px;padding-top: 5px;padding-left:5px;padding-right:5px; background-color: LightGrey" class="nav-link" href="#" (click) = "favAdd()"><i style = "font-size:30px" [style.color] =  "starStyle" class="material-icons">{{starIcon}}</i></a>
+  </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+  <div [class]="divclass_current" id="current" role="tabpanel" aria-labelledby="current-tab" >
+    <div style = "max-width: 500px; margin:auto" >
+    <div class="card" id = "currentID">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-7">
+            <p class = "cityText">{{permCity}}</p>
+            <p class= "timeZoneText">{{currentTimezone}}</p>
+            <p style = "font-size: 1.6em">{{currentTemp}} <img src = "https://cdn3.iconfinder.com/data/icons/virtual-notebook/16/button_shape_oval-512.png"style = "width:7px ;vertical-align:text-top"> F</p>
+            <p>{{currentSummary}}</p>
+          </div>
+          <div class="col-5" ><img style = "width:125px; padding-top: 20px" [src] = "stateSealURL"></div>
+        </div>
+        <div class="row">
+          <div *ngFor = "let curr of currentArray, index as i" class="col text-center">
+            <img class = "icons"  [src] = "curr.image" [matTooltip]="curr.tooltip" matTooltipPosition = "above">
+            <div class = "iconText text-center">{{curr.value}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+  <div [class]="divclass_hourly" id="hourly" role="tabpanel" aria-labelledby="hourly-tab">
+    <div style = "height:50px" ></div>
+    <div class = "container">
+    <select id="hourDrop" class="form-control" [(ngModel)] ="hourSelected" (change) = "changeDrop($event)" style = "max-width: 400px">
+      <option selected>Temperature</option>
+      <option>Pressure</option>
+      <option>Humidity</option>
+      <option>Ozone</option>
+      <option>Visibility</option>
+      <option>Windspeed</option>
+    </select>
+  </div>
+
+    <div id="chart" class = "container">
+      <canvas baseChart
+            [datasets]="barChartData"
+            [labels]="barChartLabels"
+            [options]="barChartOptions"
+            [legend]="barChartLegend"
+            [chartType]="barChartType">
+      </canvas>
+    </div>
+
+  </div>
+  <div [class]="divclass_weekly" id="weekly" role="tabpanel" aria-labelledby="weekly-tab" >
+    <div style = "height:75px" ></div>
+    <div id="chartContainer" style =  "width:100%"></div>
+  </div>
+</div>
+</div>
+</div>
+
+
+<!--Modal Window-->
+<ng-template #content let-modal>
+  <div class="modal-header" style = "background-color: rgb(74,134,165)">
+    <h4 class="modal-title" id="modal-basic-title">{{this.modalDate}}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" style = "background-color: rgb(130,202,241)">
+    <div class = "container">
+      <div class="row">
+        <div class="col">
+          <p class = "cityText">{{this.permCity}}</p>
+          <p style = "font-size: 1.8em">{{modalTemperature}} <img src = "https://cdn3.iconfinder.com/data/icons/virtual-notebook/16/button_shape_oval-512.png"style = "width:10px ;vertical-align:text-top"> F</p>
+          <p style = "font-size:1em">{{modalConditions}}</p>
+        </div>
+        <div class="col justify-content-center align-items-center">
+          <img style = "width:75%" [src] = "modalImageSource">
+        </div>
+      </div>
+      <hr>
+      <div class="row justify-content-end">
+        <div class="col-md-auto">
+        <p class = "modalP">Precipitation: {{modalPrecipitation}}</p>
+        <p class = "modalP">Chance of Rain: {{modalChanceOfRain}} %</p>
+        <p class = "modalP">Wind Speed: {{modalWindSpeed}} mph</p>
+        <p class = "modalP">Humidity: {{modalHumidity}} %</p>
+        <p class = "modalP">Visibility: {{modalVisibility}} miles</p>
+        </div>
+      </div>
+    </div>
+  
+  </div>
+</ng-template>
+
+<button style = "display:none" id = "modalButton" class="btn btn-lg btn-outline-primary" (click)="open(content)">Launch demo modal</button>
+
+<!--end modal window-->
+
+
+<!--FAVORTIES-->
+<div style = "margin-left:10px;margin-right:10px">
+<div class = "container-fluid" [style.display] = "favoritesShow">
+  <div [style.display] = "favTableShow">
+  <table  class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Image</th>
+      <th scope="col">City</th>
+      <th scope="col">State</th>
+      <th scope="col">Wish List</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor = "let fav of favoritesArray, index as i">
+      <td>{{i+1}}</td>
+      <td><img [src] = fav.image style = "width:45px"></td>
+      <td><a href="#" (click)= "goToFav(fav.key,fav.city,fav.state)">{{fav.city}}</a></td>
+      <td>{{fav.state}}</td>
+      <td><button type = "button" (click) = "removeFav(fav.key)" style = "background-color: white;border:none; border-radius:3px; "><i style = " margin:10px;font-size:24px; color:orange" class="material-icons">delete</i></button></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<div [style.display] = "favoritesNone" class="alert alert-warning" role="alert">
+  No records.
+</div>
+</div>
+</div>
+
+<!--Favorites none-->
+
+<div [style.display] = "recordsNone" class="alert alert-warning" role="alert">
+  Invalid Address.
+</div>
+
+
+
+
+
+
+
+
+
+  <!--<mat-form-field>
+    <input type="text" matInput [formControl]="myControl" [matAutocomplete]="auto" (keyup) = "autoChange()">
+  </mat-form-field>
+
+  <mat-autocomplete #auto="matAutocomplete">
+    <mat-option *ngFor="let option of options" [value]="option">{{option}}</mat-option>
+  </mat-autocomplete>-->

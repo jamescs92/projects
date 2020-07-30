@@ -1,0 +1,102 @@
+a
+{
+	color:blue;
+}
+
+.tf
+{
+	background-color:grey;
+}
+
+.modalP
+{
+	margin: 3px;
+}
+
+#initsearch
+{
+	background-color: rgb(74,134,165);
+	border-style:solid;
+	border-width:1px;
+	border-color:black;
+	max-width:900px;
+}
+
+.btn
+{
+	margin:10px;
+	border-color:black;
+}
+
+.form-control
+{
+	border-color:black;
+}
+
+#currentID
+{
+	background-color:rgb(130,202,241);
+	border-style:solid;
+	border-width:1px;
+	border-color:black;
+	margin:10px;
+	margin-top: 20px;
+}
+
+#tabsID
+{
+	max-width:1100px;
+}
+.container-fluid
+{
+	padding:0px;
+}
+
+@media all and (max-width: 500px){
+  .icons{
+   width:15px
+    }
+  .iconText{
+  	font-size: .55em;
+  }
+  .cityText{
+  	font-size:1em;
+  }
+  .timeZoneText{
+  	font-size:.9em;
+  }
+}
+
+@media all and (min-width: 501px){
+  .icons{
+   width:22px
+    }
+   .iconText{
+   	font-size:1em;
+   }
+   .cityText
+   {
+   	font-size:1.5em;
+   }
+   .timeZoneText{
+   	font-size:1.4em;
+   }
+}
+
+@media all and (min-width: 750px)
+{
+  .idMargins
+  {
+    margin-left: 70px;
+    margin-right:125px;
+  }
+}
+
+.table-striped>tbody>tr:nth-child(odd) {
+   background-color: rgb(130,202,241);
+ }
+
+.table-striped>thead>tr,
+.table-striped>tbody>tr:nth-child(even) {
+   background-color: rgb(74,134,165);
+ }
