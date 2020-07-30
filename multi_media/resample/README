@@ -1,0 +1,25 @@
+Assignment Description:
+
+Input to your program will take four parameters where
+􏰀 The first parameter is the name of the image, which will be provided in an 8 bit
+per channel RGB format (Total 24 bits per pixel). You may assume that all images will be of the same size for this assignment, more information on the image format will be placed on the DEN class website
+􏰀 The second parameter will be a mode. It will have an input of 1 or 2. Depending on the input you are asked to process the image separately. For mode 1 you will be rescaling/resampling your image. Mode 2 represents an interactive application. Both these modes are described in more detail below
+􏰀 The third parameter is a floating-point value suggesting by how much the image has to be scaled, such as 0.5 or 1.2 This single number will scale both width and height, resulting in re-sampling your image.
+􏰀 The fourth parameter will be a boolean value (0 or 1) suggesting whether you want to deal with aliasing. A 0 signifies do nothing (aliasing will remain in your output) and a 1 signifies that anti-aliasing should be performed.
+
+To invoke your program, we will compile it and run it at the command line as
+YourProgram.exe C:/myDir/myImage.rgb M S A
+where M S A are the parameters as described above. Example inputs are shown below and this should give you a fair idea about what your input parameters do and how your program will be tested.
+1. YourProgram,exe image1.rgb 1 1.0 0
+Here you are in mode 1 (scaling) and input the image will be scaled by 1.0, no antialiasing performed. This effectively means that your output will be the same as your input
+2. YourProgram,exe image1.rgb 1 0.5 1
+Here you are in mode 1 (scaling) and input the image will be scaled by 0.5, antialiasing is performed. This should reduce your image to half its size in left and right removing any aliasing effects.
+
+Details for Mode 1:
+In this mode, you will be scaling (up or down) the image depending on the scale value. Your output image dimensions need to change accordingly. You will need to fill in the pixel values of the output image by appropriately mapping them to the input image.
+If no anti-aliasing is performed (value = 0), then your program should simply copy the value of the mapped pixel from input to the output.
+If anti-aliasing is performed (value = 1), then your program should copy a weighted filtered value of the neighborhood around the input sample to the output location. The filtered lookup will depend on the filter you are trying to implement, for instance an averaging filter.
+
+Details for Mode 2:
+In this mode you are going to implement an interactive scaled or magnified lookup around your mouse location. So as you move your mouse point over the image, you
+should display an appropriate scaled circular area with radius of 100 pixels to show your magnified region at the same contrast level. The rest of the image should be shown at a lower contrast. The scaling and anti-aliasing parameters should be respected accordingly for the magnified region.
